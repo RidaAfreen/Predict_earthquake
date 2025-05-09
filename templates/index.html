@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Earthquake Prediction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Earthquake Prediction</h1>
+        <form id="prediction-form">
+            <label for="latitude">Latitude:</label>
+            <input type="number" step="any" id="latitude" name="latitude" required>
+
+            <label for="longitude">Longitude:</label>
+            <input type="number" step="any" id="longitude" name="longitude" required>
+
+            <label for="depth">Depth:</label>
+            <input type="number" step="any" id="depth" name="depth" required>
+
+            <label for="mag">Magnitude:</label>
+            <input type="number" step="any" id="mag" name="mag" required>
+
+            <label for="hour">Hour:</label>
+            <input type="number" step="any" id="hour" name="hour" required>
+
+            <button type="submit">Predict</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                latitude: parseFloat(form.latitude.value),
+                longitude: parseFloat(form.longitude.value),
+                depth: parseFloat(form.depth.value),
+                mag: parseFloat(form.mag.value),
+                hour: parseFloat(form.hour.value)
+            };
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            document.getElementById('result').textContent = 'Prediction: ' + result.prediction;
+        });
+    </script>
+</body>
+</html>
